@@ -9,7 +9,8 @@ Indice
 5. Flujo de trabajo
 6. Rutas
 7. Pruebas
-8. Conclusión
+8. Despliegue
+9. bonus 
 
 1. Descripción
 El proyecto está constituido usando Node.js con Express para manejar rutas y pas operaciones CRUD, MongoDB para la base de datos donde se alamacenan los productos, y HTML/CSS para la vista dinámica.Los Productos se pueden gestionar a través de un dashboard que incluye opciones para crear, actualizar, ver y eliminiar productos.
@@ -66,5 +67,35 @@ POST /dashboard: Crea un nuevo producto.
 GET /dashboard/:productId/edit: Muestra el formulario para editar un producto existente.
 POST /dashboard/:productId: Actualiza un producto existente.
 
+7. Pruebas.
+a traves de Postman realice las pruebas pertinentes para ver que todos los controladores y rutas funcionan correctamente tanto los post como los get, ademas desde loscalhost:8080 accedi a todas las rutas para comprobar que funcionaba correctamente.
+8. Despliegue
+- configuracion de Render: cree un nuevo proyecto en render y vinculé el repositorio de GitHub donde se encuentra el project.
+- Añadi las variables de entorno, confihure las variables necesarias como Mongo _URi y las Claves de Firebase, asegurandome de que el proyecto funcionara correctamente en el entrono de producción.
+-Despliegue automatico: cada vex que realizo un push en la rama principal de mi repositorio, render se encarga de desplegar automáticamente la ultima versión del proyecto, asegurnado que siempre esté actualizado.
+BONUS
+Añado los siguientes documentos:
+- Dentro de la carpeta config añado los documentos: firebase.js, firebaseClient.js y serviceAccountKey.json
+- Dento de la carpeta controller: authContoller.js y apiController.js
+- Dentro de la carpeta middlewares: authMiddleware.js
+- Dentro de la carpeta routes: apiRoutes.js y authRoutes.js
+- Dentro de la carpeta test: productController.test.js
+- añado tambien un documento de Swagger.js
+9. BONUS
+BONUS 1 - Test
+- instalo jest y supertest con npm install --save-dev jest supertest.
+- en productContoller.test.js creo las pruebas para los metodos de los controladores de productos, verificando que las respuestas son correctas y que las operaciones CRUD funcionan
+BONUS 2 - Autenticación con firebase
+- Istalacion de firebase : npm install firebase firebase-admin
+- en firebase.js inicialicé firebase Admin utilizando el archivo serviceAccountKey.json y configure la autenticación con firebase
+- en authController.js, implementé la logica para el registro y login de usuarios
+- En routes/authRoutes.js rutas para manejar solicitudes de autenticación
+- en firebaseClient.js auntenticación del lado del cliente
 
-
+BONUS - 3 API y documentación con Swagger
+ - instalación de Swagge: 
+ npm install swagger-jsdoc swagger-ui-express
+ - Configuracion de Swagger en Swagger.js aqui esta la informacion básica de la API
+ - en apiRoutes.js estan las rutas de la API para el controlador que está en apiController.js para manejar solicitudes, las rutas incluyen endpoints para obtener, crear, actualizar y eliminar productos.
+ - en el archivo index.js, integrá Swagger con Express para que la documentacion esté disponible en localhost:8080/api-docs.
+ ESTE ES EL ENCALE DE RENDER: https://backend-project-break-ty9s.onrender.com

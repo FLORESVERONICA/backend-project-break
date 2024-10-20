@@ -1,6 +1,5 @@
 const Product = require('../models/Product');
 
-// Controlador para la página de inicio
 const showHome = (req, res) => {
   const html = baseHtml('Bienvenido a la tienda d_4hojas', getNavBar(false) + `
     <h1>Bienvenido a la tienda d_4hojas</h1>
@@ -9,7 +8,6 @@ const showHome = (req, res) => {
   res.send(html);
 };
 
-// Mostrar todos los productos
 const showProducts = async (req, res) => {
   try {
     const category = req.query.category;
@@ -29,21 +27,19 @@ const showProducts = async (req, res) => {
   }
 };
 
-// Mostrar detalle de un producto
 const showProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.productId);
     if (!product) {
-      return res.status(404).send('Producto no encontrado');
+      return res.status(404).json({ error: 'Producto no encontrado' });
     }
     const html = baseHtml(product.name, getNavBar(false) + getProductDetail(product));
     res.send(html);
   } catch (err) {
-    res.status(500).send('Error al obtener el producto');
+    res.status(500).json({ error: 'Error al obtener el producto' });
   }
 };
 
-// Mostrar productos en el dashboard
 const showDashboardProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -55,25 +51,28 @@ const showDashboardProducts = async (req, res) => {
   }
 };
 
-// Mostrar formulario para crear nuevo producto
 const showNewProduct = (req, res) => {
   const html = baseHtml('Crear Nuevo Producto', getNavBar(true) + getProductForm());
   res.send(html);
 };
 
-// Crear un nuevo producto
 const createProduct = async (req, res) => {
   try {
     const { name, description, image, category, size, price } = req.body;
+
+    if (!name || !description || !image || !category || !size || price === undefined) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    }
+
     const product = new Product({ name, description, image, category, size, price });
     await product.save();
-    res.redirect('/dashboard');
+    res.status(201).json({ message: 'Producto creado con éxito', product });
   } catch (err) {
-    res.status(500).send('Error al crear el producto');
+    console.error(`Error al crear producto: ${err.message}`);
+    res.status(500).json({ error: 'Error al crear el producto' }); 
   }
 };
 
-// Mostrar formulario para editar producto
 const showEditProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.productId);
@@ -87,7 +86,6 @@ const showEditProduct = async (req, res) => {
   }
 };
 
-// Actualizar un producto
 const updateProduct = async (req, res) => {
   try {
     await Product.findByIdAndUpdate(req.params.productId, req.body);
@@ -97,7 +95,6 @@ const updateProduct = async (req, res) => {
   }
 };
 
-// Eliminar un producto
 const deleteProduct = async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.productId);
@@ -106,8 +103,6 @@ const deleteProduct = async (req, res) => {
     res.status(500).send('Error al eliminar el producto');
   }
 };
-
-// Funciones auxiliares
 
 function baseHtml(title, content) {
   return `
@@ -133,6 +128,8 @@ function getNavBar(isDashboard = false) {
     <a href="/products?category=Llaveros">Llaveros</a>
     <a href="/products?category=Camisetas">Camisetas</a>
     <a href="/products?category=Lozas">Lozas</a>
+    <a href="/auth/login">Iniciar Sesión</a> <!-- Enlace al login -->
+    <a href="/auth/register">Registrarse</a> <!-- Enlace al registro -->
   `;
 
   if (isDashboard) {
@@ -223,5 +220,3 @@ module.exports = {
   updateProduct,
   deleteProduct
 };
-
-
